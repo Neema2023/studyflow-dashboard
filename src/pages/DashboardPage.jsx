@@ -22,65 +22,63 @@ export default function DashboardPage({ tasks, displayName }) {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-4xl font-bold text-slate-900">
-          Welcome back, {displayName || 'Student'} 
+        <h1 className="text-3xl font-bold text-slate-900 md:text-4xl">
+          Hello, {displayName || 'Student'}
         </h1>
-        <p className="mt-2 text-lg text-slate-600">
+        <p className="mt-2 text-base text-slate-600 md:text-lg">
           {pending} task{pending !== 1 ? 's' : ''} remaining.
         </p>
       </header>
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <SummaryCard label="Total tasks" value={total} accent="slate" />
-        <SummaryCard label="Completed" value={completed} accent="green" />
+      {/* On mobile, show 3 cards side-by-side like the design. Show 4 on desktop. */}
+      <div className="grid grid-cols-3 gap-3 md:grid-cols-4 md:gap-4">
+        <SummaryCard label="Total" value={total} accent="slate" />
+        <SummaryCard label="Done" value={completed} accent="green" />
         <SummaryCard label="Pending" value={pending} accent="amber" />
-        <SummaryCard label="Overdue" value={overdue} accent="red" />
+        <div className="hidden md:block">
+          <SummaryCard label="Overdue" value={overdue} accent="red" />
+        </div>
       </div>
 
       <Card title="Progress" subtitle="Overall completion">
-        <div className="mb-3 flex justify-between text-base text-slate-600">
+        <div className="mb-3 flex justify-between text-sm text-slate-600 md:text-base">
           <span className="font-semibold">{progress}% complete</span>
           <span>{completed} / {total}</span>
         </div>
-        <div className="h-4 w-full overflow-hidden rounded-full bg-slate-200">
+        <div className="h-3 w-full overflow-hidden rounded-full bg-slate-200 md:h-4">
           <div className="h-full bg-teal-500 transition-all" style={{ width: `${progress}%` }} />
         </div>
       </Card>
 
       <Card
-        title="Upcoming tasks"
+        title="Next tasks"
         action={
-          <Link to="/tasks" className="text-base font-medium text-teal-600 hover:underline">
+          <Link to="/tasks" className="text-sm font-medium text-teal-600 hover:underline md:text-base">
             View all →
           </Link>
         }
       >
         {upcoming.length === 0 ? (
-          <p className="text-base text-slate-500">No upcoming tasks.</p>
+          <p className="text-base text-slate-500">No upcoming tasks. 🎉</p>
         ) : (
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <div className="flex flex-col gap-3">
             {upcoming.map(task => (
               <div
                 key={task.id}
-                className="rounded-xl border border-slate-200 bg-slate-50 p-4"
+                className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
               >
-                <p className="text-base font-medium text-slate-900">{task.title}</p>
-                <p className="mt-1 text-sm text-slate-500">
-                  {task.category} · Due {task.dueDate || '—'}
-                </p>
+                {/* Circle indicator like the design */}
+                <div className="h-4 w-4 flex-shrink-0 rounded-full border-2 border-teal-500" />
+                <div className="flex-1">
+                  <p className="text-base font-medium text-slate-900">{task.title}</p>
+                  <p className="mt-1 text-xs text-slate-500">
+                    {task.category} · Due {task.dueDate || '—'}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
         )}
-      </Card>
-
-      <Card title="Focus preview">
-        <p className="text-base text-slate-600">
-          Ready to concentrate?{' '}
-          <Link to="/focus" className="font-medium text-teal-600 hover:underline">
-            Start a focus session →
-          </Link>
-        </p>
       </Card>
     </div>
   )

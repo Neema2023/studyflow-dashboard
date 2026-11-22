@@ -15,7 +15,7 @@ export default function TasksPage({ tasks, addTask, updateTask, deleteTask, togg
   const [status, setStatus] = useState('all')
   const [sort, setSort] = useState('dueAsc')
   const [editingTask, setEditingTask] = useState(null)
-  const [showForm, setShowForm] = useState(false) // NEW: form visibility
+  const [showForm, setShowForm] = useState(false)
 
   const debouncedSearch = useDebounce(search, 250)
   const searchRef = useRef(null)
@@ -50,6 +50,7 @@ export default function TasksPage({ tasks, addTask, updateTask, deleteTask, togg
   function handleEdit(task) {
     setEditingTask(task)
     setShowForm(true)
+    window.scrollTo({ top: 0, behavior: 'smooth' }) // Scroll to top to see form
   }
 
   function handleCancel() {
@@ -64,13 +65,11 @@ export default function TasksPage({ tasks, addTask, updateTask, deleteTask, togg
     <div className="space-y-6">
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-4xl font-bold text-slate-900">Tasks</h1>
-          <p className="mt-2 text-lg text-slate-600">
-            Add, edit, complete and organise your study tasks.
-          </p>
+          <h1 className="text-3xl font-bold text-slate-900 md:text-4xl">My tasks</h1>
         </div>
+        {/* Hide top button on mobile, show on desktop */}
         {!showForm && (
-          <Button variant="accent" size="lg" onClick={() => setShowForm(true)}>
+          <Button variant="accent" size="lg" onClick={() => setShowForm(true)} className="hidden md:inline-flex">
             + Add task
           </Button>
         )}
@@ -86,63 +85,37 @@ export default function TasksPage({ tasks, addTask, updateTask, deleteTask, togg
         </Card>
       )}
 
-      <Card title="Filters">
+      <Card title="Filters" className="hidden md:block">
+        {/* Desktop Filters (hidden on mobile) */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div>
-            <label htmlFor="search" className="mb-2 block text-sm font-semibold text-slate-700">
-              Search
-            </label>
+            <label htmlFor="search-d" className="mb-2 block text-sm font-semibold text-slate-700">Search</label>
             <input
-              id="search"
-              ref={searchRef}
+              id="search-d"
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search tasks..."
               className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-base focus:border-teal-500 focus:outline-none"
             />
           </div>
-
           <div>
-            <label htmlFor="category-filter" className="mb-2 block text-sm font-semibold text-slate-700">
-              Category
-            </label>
-            <select
-              id="category-filter"
-              value={category}
-              onChange={e => setCategory(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-base"
-            >
+            <label htmlFor="cat-d" className="mb-2 block text-sm font-semibold text-slate-700">Category</label>
+            <select id="cat-d" value={category} onChange={e => setCategory(e.target.value)} className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-base">
               <option value="all">All categories</option>
               {categories.map(c => <option key={c}>{c}</option>)}
             </select>
           </div>
-
           <div>
-            <label htmlFor="status-filter" className="mb-2 block text-sm font-semibold text-slate-700">
-              Status
-            </label>
-            <select
-              id="status-filter"
-              value={status}
-              onChange={e => setStatus(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-base"
-            >
+            <label htmlFor="status-d" className="mb-2 block text-sm font-semibold text-slate-700">Status</label>
+            <select id="status-d" value={status} onChange={e => setStatus(e.target.value)} className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-base">
               <option value="all">All</option>
               <option value="active">Active</option>
               <option value="completed">Completed</option>
             </select>
           </div>
-
           <div>
-            <label htmlFor="sort" className="mb-2 block text-sm font-semibold text-slate-700">
-              Sort by
-            </label>
-            <select
-              id="sort"
-              value={sort}
-              onChange={e => setSort(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-base"
-            >
+            <label htmlFor="sort-d" className="mb-2 block text-sm font-semibold text-slate-700">Sort by</label>
+            <select id="sort-d" value={sort} onChange={e => setSort(e.target.value)} className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-base">
               <option value="dueAsc">Due date (soonest)</option>
               <option value="dueDesc">Due date (latest)</option>
               <option value="az">Title A–Z</option>
@@ -151,9 +124,20 @@ export default function TasksPage({ tasks, addTask, updateTask, deleteTask, togg
         </div>
       </Card>
 
-      <Card title={`Tasks (${filtered.length})`}>
+      {/* Mobile Search Bar only */}
+      <div className="md:hidden">
+        <input
+          ref={searchRef}
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          placeholder="Search tasks ..."
+          className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-base shadow-sm focus:border-teal-500 focus:outline-none"
+        />
+      </div>
+
+      <div className="space-y-4">
         {noTasks && !showForm && (
-          <div className="rounded-xl bg-slate-50 p-6 text-center">
+          <div className="rounded-xl bg-white p-6 text-center shadow-sm border border-slate-200">
             <p className="text-base text-slate-600">
               No tasks yet. Click <strong>+ Add task</strong> to get started.
             </p>
@@ -164,6 +148,8 @@ export default function TasksPage({ tasks, addTask, updateTask, deleteTask, togg
             No tasks match your current search and filters.
           </p>
         )}
+        
+        {/* Tasks List */}
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {filtered.map(task => (
             <TaskCard
@@ -175,7 +161,21 @@ export default function TasksPage({ tasks, addTask, updateTask, deleteTask, togg
             />
           ))}
         </div>
-      </Card>
+      </div>
+
+      {/* Floating Add Task Button for Mobile */}
+      {!showForm && (
+        <div className="fixed bottom-20 left-0 z-20 w-full px-4 md:hidden">
+          <Button 
+            variant="accent" 
+            size="lg" 
+            onClick={() => { setShowForm(true); window.scrollTo({ top: 0, behavior: 'smooth' }) }} 
+            className="w-full shadow-lg justify-center py-4 text-lg"
+          >
+            + Add task
+          </Button>
+        </div>
+      )}
     </div>
   )
 }

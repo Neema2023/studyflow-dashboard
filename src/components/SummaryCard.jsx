@@ -1,18 +1,15 @@
 export default function SummaryCard({ label, value, accent = 'slate' }) {
   const accents = {
-    slate: 'border-l-slate-400',
-    teal: 'border-l-teal-500',
-    amber: 'border-l-amber-500',
-    red: 'border-l-red-500',
-    green: 'border-l-emerald-500',
+    slate: 'border-slate-200 text-slate-900',
+    green: 'border-slate-200 text-slate-900',
+    amber: 'border-slate-200 text-slate-900',
+    red: 'border-slate-200 text-slate-900',
   }
 
   return (
-    <div
-      className={`rounded-2xl border border-slate-200 border-l-4 ${accents[accent]} bg-white p-6 shadow-sm`}
-    >
-      <p className="text-base text-slate-500">{label}</p>
-      <p className="mt-2 text-4xl font-bold text-slate-900">{value}</p>
+    <div className="flex flex-col justify-center rounded-xl border border-slate-200 bg-white p-4 shadow-sm md:rounded-2xl md:p-6">
+      <p className="text-2xl font-bold text-slate-900 md:text-4xl">{value}</p>
+      <p className="mt-1 text-xs font-medium text-slate-500 md:text-base">{label}</p>
     </div>
   )
 }
