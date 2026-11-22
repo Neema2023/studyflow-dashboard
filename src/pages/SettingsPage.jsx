@@ -86,7 +86,7 @@ export default function SettingsPage({ settings, onSave }) {
 
           <div className="flex items-center gap-3">
             <Button type="submit" variant="accent">Save settings</Button>
-            {saved && <span className="text-sm font-medium text-emerald-600">✅ Saved!</span>}
+            {saved && <span className="text-sm font-medium text-emerald-600"> Saved!</span>}
           </div>
         </form>
       </Card>
