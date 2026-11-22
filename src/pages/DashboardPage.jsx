@@ -23,7 +23,7 @@ export default function DashboardPage({ tasks, displayName }) {
     <div className="space-y-6">
       <header>
         <h1 className="text-4xl font-bold text-slate-900">
-          Welcome back, {displayName || 'Student'} 👋
+          Welcome back, {displayName || 'Student'} 
         </h1>
         <p className="mt-2 text-lg text-slate-600">
           {pending} task{pending !== 1 ? 's' : ''} remaining.
@@ -56,7 +56,7 @@ export default function DashboardPage({ tasks, displayName }) {
         }
       >
         {upcoming.length === 0 ? (
-          <p className="text-base text-slate-500">No upcoming tasks. 🎉</p>
+          <p className="text-base text-slate-500">No upcoming tasks.</p>
         ) : (
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
             {upcoming.map(task => (
