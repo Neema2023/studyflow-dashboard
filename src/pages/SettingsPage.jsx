@@ -88,7 +88,7 @@ export default function SettingsPage({ settings, onSave }) {
             </div>
           </div>
 
-          {/* UPDATED UI PREFERENCE TOGGLE - Clickable Label */}
+          
           <label className="flex cursor-pointer items-center gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4 transition hover:bg-slate-100">
             <input
               type="checkbox"
@@ -109,7 +109,7 @@ export default function SettingsPage({ settings, onSave }) {
 
           <div className="flex items-center gap-4 pt-2">
             <Button type="submit" variant="accent" size="lg">Save settings</Button>
-            {saved && <span className="text-base font-medium text-emerald-600">✅ Saved!</span>}
+            {saved && <span className="text-base font-medium text-emerald-600"> Saved!</span>}
           </div>
         </form>
       </Card>
