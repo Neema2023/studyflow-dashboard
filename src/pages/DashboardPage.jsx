@@ -22,10 +22,10 @@ export default function DashboardPage({ tasks, displayName }) {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-3xl font-bold text-slate-900">
+        <h1 className="text-4xl font-bold text-slate-900">
           Welcome back, {displayName || 'Student'} 👋
         </h1>
-        <p className="mt-1 text-slate-600">
+        <p className="mt-2 text-lg text-slate-600">
           {pending} task{pending !== 1 ? 's' : ''} remaining.
         </p>
       </header>
@@ -38,27 +38,34 @@ export default function DashboardPage({ tasks, displayName }) {
       </div>
 
       <Card title="Progress" subtitle="Overall completion">
-        <div className="mb-2 flex justify-between text-sm text-slate-600">
-          <span>{progress}% complete</span>
+        <div className="mb-3 flex justify-between text-base text-slate-600">
+          <span className="font-semibold">{progress}% complete</span>
           <span>{completed} / {total}</span>
         </div>
-        <div className="h-3 w-full overflow-hidden rounded-full bg-slate-200">
+        <div className="h-4 w-full overflow-hidden rounded-full bg-slate-200">
           <div className="h-full bg-teal-500 transition-all" style={{ width: `${progress}%` }} />
         </div>
       </Card>
 
       <Card
         title="Upcoming tasks"
-        action={<Link to="/tasks" className="text-sm font-medium text-teal-600 hover:underline">View all →</Link>}
+        action={
+          <Link to="/tasks" className="text-base font-medium text-teal-600 hover:underline">
+            View all →
+          </Link>
+        }
       >
         {upcoming.length === 0 ? (
-          <p className="text-sm text-slate-500">No upcoming tasks. 🎉</p>
+          <p className="text-base text-slate-500">No upcoming tasks. 🎉</p>
         ) : (
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
             {upcoming.map(task => (
-              <div key={task.id} className="rounded-lg border border-slate-200 bg-slate-50 p-3">
-                <p className="font-medium text-slate-900">{task.title}</p>
-                <p className="mt-1 text-xs text-slate-500">
+              <div
+                key={task.id}
+                className="rounded-xl border border-slate-200 bg-slate-50 p-4"
+              >
+                <p className="text-base font-medium text-slate-900">{task.title}</p>
+                <p className="mt-1 text-sm text-slate-500">
                   {task.category} · Due {task.dueDate || '—'}
                 </p>
               </div>
@@ -68,7 +75,7 @@ export default function DashboardPage({ tasks, displayName }) {
       </Card>
 
       <Card title="Focus preview">
-        <p className="text-sm text-slate-600">
+        <p className="text-base text-slate-600">
           Ready to concentrate?{' '}
           <Link to="/focus" className="font-medium text-teal-600 hover:underline">
             Start a focus session →
