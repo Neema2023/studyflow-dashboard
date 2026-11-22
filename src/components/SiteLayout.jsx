@@ -38,9 +38,11 @@ export default function SiteLayout({ children }) {
         </nav>
       </aside>
 
-      {/* Main */}
+      {/* Main Content Area */}
       <main className="flex-1">
-        <div className="mx-auto max-w-6xl px-4 py-6 md:px-8 md:py-10">
+        {/* Changed max-w-6xl to max-w-7xl to use more space, 
+            and reduced left padding (md:pl-6) to bring it closer to the sidebar */}
+        <div className="mx-auto max-w-7xl px-4 py-6 md:pl-6 md:pr-8 md:py-10">
           {children}
         </div>
       </main>
