@@ -14,4 +14,5 @@ export const defaultSettings = {
     displayName: 'Student',
     studyDuration: 25,
     breakDuration: 5,
+    hideCompleted: false,
 }

@@ -7,7 +7,7 @@ import { categories } from '../data/data'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 import { useDebounce } from '../hooks/useDebounce'
 
-export default function TasksPage({ tasks, addTask, updateTask, deleteTask, toggleTask }) {
+export default function TasksPage({ tasks, addTask, updateTask, deleteTask, toggleTask, hideCompleted }) {
   useDocumentTitle('Tasks')
 
   const [search, setSearch] = useState('')
@@ -22,20 +22,30 @@ export default function TasksPage({ tasks, addTask, updateTask, deleteTask, togg
 
   const filtered = useMemo(() => {
     let list = tasks
+
+    // Apply UI preference
+    if (hideCompleted) {
+      list = list.filter(t => !t.completed)
+    }
+
+    // Search
     if (debouncedSearch.trim()) {
       const q = debouncedSearch.toLowerCase()
       list = list.filter(t => t.title.toLowerCase().includes(q))
     }
+
+    // Filters
     if (category !== 'all') list = list.filter(t => t.category === category)
     if (status === 'active') list = list.filter(t => !t.completed)
     if (status === 'completed') list = list.filter(t => t.completed)
 
+    // Sorting
     const copy = [...list]
     if (sort === 'dueAsc') copy.sort((a, b) => (a.dueDate || '').localeCompare(b.dueDate || ''))
     if (sort === 'dueDesc') copy.sort((a, b) => (b.dueDate || '').localeCompare(a.dueDate || ''))
     if (sort === 'az') copy.sort((a, b) => a.title.localeCompare(b.title))
     return copy
-  }, [tasks, debouncedSearch, category, status, sort])
+  }, [tasks, debouncedSearch, category, status, sort, hideCompleted])
 
   function handleSave(data) {
     if (editingTask) {
@@ -50,7 +60,7 @@ export default function TasksPage({ tasks, addTask, updateTask, deleteTask, togg
   function handleEdit(task) {
     setEditingTask(task)
     setShowForm(true)
-    window.scrollTo({ top: 0, behavior: 'smooth' }) // Scroll to top to see form
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   function handleCancel() {
@@ -58,7 +68,7 @@ export default function TasksPage({ tasks, addTask, updateTask, deleteTask, togg
     setShowForm(false)
   }
 
-  const noTasks = tasks.length === 0
+  const noTasks = tasks.length === 0 || (hideCompleted && tasks.every(t => t.completed))
   const noResults = !noTasks && filtered.length === 0
 
   return (
@@ -86,7 +96,7 @@ export default function TasksPage({ tasks, addTask, updateTask, deleteTask, togg
       )}
 
       <Card title="Filters" className="hidden md:block">
-        {/* Desktop Filters (hidden on mobile) */}
+        {/* Desktop Filters */}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <label htmlFor="search-d" className="mb-2 block text-sm font-semibold text-slate-700">Search</label>

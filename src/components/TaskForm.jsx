@@ -35,9 +35,11 @@ export default function TaskForm({ onSave, editingTask, onCancel }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-3">
+    // Changed max-w-md and mx-auto to make it a small, centered square card
+    <form onSubmit={handleSubmit} className="mx-auto max-w-md space-y-4 rounded-xl border border-slate-100 bg-slate-50 p-5 shadow-sm">
+      
       <div>
-        <label htmlFor="task-title" className="mb-1 block text-sm font-medium text-slate-700">
+        <label htmlFor="task-title" className="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-600">
           Task title
         </label>
         <input
@@ -48,53 +50,64 @@ export default function TaskForm({ onSave, editingTask, onCancel }) {
           placeholder="e.g. Read Chapter 5"
           className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none"
         />
-        {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+        {error && <p className="mt-1 text-xs text-red-600">{error}</p>}
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+      {/* Changed to a vertical stack (grid-cols-1) so labels fit nicely */}
+      <div className="grid grid-cols-1 gap-3">
         <div>
-          <label htmlFor="task-category" className="mb-1 block text-sm font-medium text-slate-700">Category</label>
+          <label htmlFor="task-category" className="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-600">
+            Category
+          </label>
           <select
             id="task-category"
             name="category"
             value={form.category}
             onChange={handleChange}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white"
           >
             {categories.map(c => <option key={c}>{c}</option>)}
           </select>
         </div>
+        
         <div>
-          <label htmlFor="task-due" className="mb-1 block text-sm font-medium text-slate-700">Due date</label>
+          <label htmlFor="task-due" className="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-600">
+            Due date
+          </label>
           <input
             id="task-due"
             type="date"
             name="dueDate"
             value={form.dueDate}
             onChange={handleChange}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white"
           />
         </div>
+        
         <div>
-          <label htmlFor="task-priority" className="mb-1 block text-sm font-medium text-slate-700">Priority</label>
+          <label htmlFor="task-priority" className="mb-1 block text-xs font-bold uppercase tracking-wide text-slate-600">
+            Priority
+          </label>
           <select
             id="task-priority"
             name="priority"
             value={form.priority}
             onChange={handleChange}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm bg-white"
           >
             {priorities.map(p => <option key={p}>{p}</option>)}
           </select>
         </div>
       </div>
 
-      <div className="flex gap-2">
-        <Button type="submit" variant="accent">
+      <div className="flex gap-2 pt-2">
+        <Button type="submit" variant="accent" className="w-full justify-center">
           {editingTask ? 'Save changes' : 'Add task'}
         </Button>
         {editingTask && (
-          <Button type="button" variant="ghost" onClick={onCancel}>Cancel</Button>
+          <Button type="button" variant="outline" onClick={onCancel}>
+            Cancel
+          </Button>
         )}
       </div>
     </form>

@@ -3,9 +3,10 @@ import Card from '../components/Card'
 import SummaryCard from '../components/SummaryCard'
 import { useDocumentTitle } from '../hooks/useDocumentTitle'
 
-export default function DashboardPage({ tasks, displayName }) {
+export default function DashboardPage({ tasks, displayName, hideCompleted }) {
   useDocumentTitle('Dashboard')
 
+  // Stats are calculated from ALL tasks
   const total = tasks.length
   const completed = tasks.filter(t => t.completed).length
   const pending = total - completed
@@ -14,8 +15,9 @@ export default function DashboardPage({ tasks, displayName }) {
   ).length
   const progress = total ? Math.round((completed / total) * 100) : 0
 
+  // Upcoming tasks respects the UI preference
   const upcoming = [...tasks]
-    .filter(t => !t.completed)
+    .filter(t => !t.completed && (!hideCompleted || !t.completed))
     .sort((a, b) => (a.dueDate || '').localeCompare(b.dueDate || ''))
     .slice(0, 3)
 
@@ -30,7 +32,7 @@ export default function DashboardPage({ tasks, displayName }) {
         </p>
       </header>
 
-      {/* On mobile, show 3 cards side-by-side like the design. Show 4 on desktop. */}
+      {/* Summary Cards */}
       <div className="grid grid-cols-3 gap-3 md:grid-cols-4 md:gap-4">
         <SummaryCard label="Total" value={total} accent="slate" />
         <SummaryCard label="Done" value={completed} accent="green" />
@@ -40,6 +42,7 @@ export default function DashboardPage({ tasks, displayName }) {
         </div>
       </div>
 
+      {/* Progress Bar */}
       <Card title="Progress" subtitle="Overall completion">
         <div className="mb-3 flex justify-between text-sm text-slate-600 md:text-base">
           <span className="font-semibold">{progress}% complete</span>
@@ -50,6 +53,7 @@ export default function DashboardPage({ tasks, displayName }) {
         </div>
       </Card>
 
+      {/* Next Tasks List */}
       <Card
         title="Next tasks"
         action={
@@ -67,7 +71,6 @@ export default function DashboardPage({ tasks, displayName }) {
                 key={task.id}
                 className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
               >
-                {/* Circle indicator like the design */}
                 <div className="h-4 w-4 flex-shrink-0 rounded-full border-2 border-teal-500" />
                 <div className="flex-1">
                   <p className="text-base font-medium text-slate-900">{task.title}</p>

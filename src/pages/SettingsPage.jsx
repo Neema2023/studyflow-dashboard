@@ -14,8 +14,11 @@ export default function SettingsPage({ settings, onSave }) {
   }, [settings])
 
   function handleChange(e) {
-    const { name, value } = e.target
-    setForm(prev => ({ ...prev, [name]: value }))
+    const { name, value, type, checked } = e.target
+    setForm(prev => ({ 
+      ...prev, 
+      [name]: type === 'checkbox' ? checked : value 
+    }))
     setSaved(false)
   }
 
@@ -25,6 +28,7 @@ export default function SettingsPage({ settings, onSave }) {
       ...form,
       studyDuration: Number(form.studyDuration) || 25,
       breakDuration: Number(form.breakDuration) || 5,
+      hideCompleted: Boolean(form.hideCompleted), // Ensure it saves as true/false
     })
     setSaved(true)
   }
@@ -32,14 +36,14 @@ export default function SettingsPage({ settings, onSave }) {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-3xl font-bold text-slate-900">Settings</h1>
-        <p className="mt-1 text-slate-600">Customise your StudyFlow experience.</p>
+        <h1 className="text-3xl font-bold text-slate-900 md:text-4xl">Settings</h1>
+        <p className="mt-2 text-base text-slate-600 md:text-lg">Customise your StudyFlow experience.</p>
       </header>
 
       <Card title="Preferences">
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="displayName" className="mb-1 block text-sm font-medium text-slate-700">
+            <label htmlFor="displayName" className="mb-1 block text-sm font-semibold text-slate-700">
               Display name
             </label>
             <input
@@ -47,13 +51,13 @@ export default function SettingsPage({ settings, onSave }) {
               name="displayName"
               value={form.displayName}
               onChange={handleChange}
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm focus:border-teal-500 focus:outline-none"
+              className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-base focus:border-teal-500 focus:outline-none"
             />
           </div>
 
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label htmlFor="studyDuration" className="mb-1 block text-sm font-medium text-slate-700">
+              <label htmlFor="studyDuration" className="mb-1 block text-sm font-semibold text-slate-700">
                 Study duration (minutes)
               </label>
               <input
@@ -64,11 +68,11 @@ export default function SettingsPage({ settings, onSave }) {
                 name="studyDuration"
                 value={form.studyDuration}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-base"
               />
             </div>
             <div>
-              <label htmlFor="breakDuration" className="mb-1 block text-sm font-medium text-slate-700">
+              <label htmlFor="breakDuration" className="mb-1 block text-sm font-semibold text-slate-700">
                 Break duration (minutes)
               </label>
               <input
@@ -79,14 +83,33 @@ export default function SettingsPage({ settings, onSave }) {
                 name="breakDuration"
                 value={form.breakDuration}
                 onChange={handleChange}
-                className="w-full rounded-lg border border-slate-300 px-3 py-2 text-sm"
+                className="w-full rounded-xl border border-slate-300 px-4 py-2.5 text-base"
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <Button type="submit" variant="accent">Save settings</Button>
-            {saved && <span className="text-sm font-medium text-emerald-600"> Saved!</span>}
+          {/* UPDATED UI PREFERENCE TOGGLE - Clickable Label */}
+          <label className="flex cursor-pointer items-center gap-4 rounded-xl border border-slate-200 bg-slate-50 p-4 transition hover:bg-slate-100">
+            <input
+              type="checkbox"
+              name="hideCompleted"
+              checked={form.hideCompleted || false}
+              onChange={handleChange}
+              className="h-5 w-5 rounded border-slate-300 text-teal-600 focus:ring-teal-500"
+            />
+            <div>
+              <span className="block text-base font-medium text-slate-900">
+                Hide completed tasks
+              </span>
+              <span className="block text-sm text-slate-500">
+                Hide finished tasks from your Dashboard and Tasks list.
+              </span>
+            </div>
+          </label>
+
+          <div className="flex items-center gap-4 pt-2">
+            <Button type="submit" variant="accent" size="lg">Save settings</Button>
+            {saved && <span className="text-base font-medium text-emerald-600">✅ Saved!</span>}
           </div>
         </form>
       </Card>
